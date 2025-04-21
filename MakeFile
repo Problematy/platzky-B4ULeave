@@ -1,0 +1,16 @@
+.PHONY: install test build publish clean
+
+install:
+	pip install .
+
+test:
+	pytest
+
+build:
+	poetry build
+
+publish:
+	poetry publish --build
+
+clean:
+	rm -rf dist build *.egg-info
