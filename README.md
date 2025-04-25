@@ -16,7 +16,15 @@ pip install platzky-B4ULeave
 "plugins": [
     {
         "name": "B4ULeave",
-        "config": {}
+        "config": {
+            "message": "Your custom message goes here"
+        }
     }
 ]
+```
+
+If you omit `message`, it defaults to:
+
+```html
+<p>'Czy na pewno chcesz<br>opuścić naszą stronę?'</p>
 ```

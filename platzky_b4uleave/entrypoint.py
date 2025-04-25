@@ -1,14 +1,16 @@
 from flask import Flask, Response
 from typing import Any, Dict
 
-def process(app, plugin_config: Dict[str, Any]):
-    # Zapisujemy konfigurację (opcjonalnie pusta)
+def process(app, plugin_config: Dict[str, Any]): 
+    # Defines the main `process` function taking a Flask app instance and plugin configuration
+    # Store plugin configuration (defaults to empty dict)
     app.config['B4ULeave'] = plugin_config or {}
 
     @app.after_request
     def add_B4ULeave(response: Response) -> Response:
+      # Decorator that registers a function to run after each request is processed
         if 'text/html' in response.headers.get('Content-Type', ''):
-            # kod wstrzykiwany przed </body>
+          # Function receives a Response object and returns a modified Response
             html = f"""
 <style>
 #B4ULeave-OknoModalne {{

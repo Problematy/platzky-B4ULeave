@@ -1,0 +1,1 @@
+from platzky_b4uleave.entrypoint import process as process

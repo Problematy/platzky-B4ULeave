@@ -1,1 +1,0 @@
-from B4ULeave.entrypoint import process as process
