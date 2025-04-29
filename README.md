@@ -2,7 +2,7 @@
 
 ## Overview
 
-Plugin B4ULeave wyświetla modalne okno z pytaniem, czy użytkownik chce opuścić stronę przy zdarzeniu `beforeunload`.
+The B4ULeave plugin displays a modal window asking the user whether they want to leave the page when the beforeunload event occurs.
 
 ## Installation
 
