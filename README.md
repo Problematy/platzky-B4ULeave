@@ -1,4 +1,4 @@
-# b4uLeave Plugin
+# b4uleave Plugin
 
 ## Overview
 
@@ -7,7 +7,7 @@ The B4ULeave plugin displays a modal window asking the user whether they want to
 ## Installation
 
 ```sh
-pip install platzky-b4uLeave
+pip install platzky-b4uleave
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ pip install platzky-b4uLeave
 ```json
 "plugins": [
     {
-        "name": "b4uLeave",
+        "name": "b4uleave",
         "config": {
             "message": "Your custom message goes here"
         }
