@@ -18,6 +18,7 @@ def test_that_plugin_loads_b4uleave():
                     {
                         "name": "b4uleave",
                         "config": {
+                            "message": "Your custom message goes here"
                         },
                     }
                 ],
@@ -25,7 +26,7 @@ def test_that_plugin_loads_b4uleave():
         },
     }
 
-    b4uleave_function = "B4ULeave-OknoModalne"
+    b4uleave_function = "B4ULeave-ModalWindow"
 
     config_with_plugin = Config.model_validate(data_with_plugin)
 
@@ -33,7 +34,7 @@ def test_that_plugin_loads_b4uleave():
 
     response = app_with_plugin.test_client().get("/")
     
-    assert response.status_code == 404
+    assert response.status_code == 200
     decoded_response = response.data.decode()
     assert (
         b4uleave_function in decoded_response

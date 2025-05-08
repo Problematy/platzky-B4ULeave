@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "platzky_b4uleave"
 version = "0.1.0"
-description = ""
+description = "A Platzky plugin to show a confirmation dialog when users attempt to leave a page"
 authors = []
 license = "MIT"
 readme = "README.md"
