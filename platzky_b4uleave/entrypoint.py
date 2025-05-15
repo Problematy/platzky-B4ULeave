@@ -6,6 +6,8 @@ def process(app, plugin_config: Dict[str, Any]): # Defines the main `process` fu
     app.config['b4uleave'] = plugin_config or {}
 
     message = app.config['b4uleave'].get('message', 'Czy na pewno chcesz<br>opuścić naszą stronę?')
+    stay = app.config['b4uleave'].get('stay', 'Stay')
+    leave = app.config['b4uleave'].get('leave', 'Leave')
 
     @app.after_request # Decorator that registers a function to run after each request is processed
     def add_B4ULeave(response: Response) -> Response:
@@ -54,12 +56,13 @@ def process(app, plugin_config: Dict[str, Any]): # Defines the main `process` fu
 }}
 </style>
 
-<div id="B4ULeave-ModalWindow">
-  <div class="B4ULeave-Content">
+<div id="B4ULeave-ModalWindow" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+     background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:9999;">
+  <div class="B4ULeave-Content" style="background:white; padding:2rem; border-radius:8px; max-width:90%; text-align:center;">
     <p>{message}</p>
-    <div class="B4ULeave-Options">
-      <button id="B4ULeave-Stay">Zostań</button>
-      <button id="B4ULeave-Leave">Wyjdź</button>
+    <div class="B4ULeave-Options" style="margin-top:1rem;">
+      <button id="B4ULeave-Stay">{stay}</button>
+      <button id="B4ULeave-Leave">{leave}</button>
     </div>
   </div>
 </div>
@@ -67,14 +70,30 @@ def process(app, plugin_config: Dict[str, Any]): # Defines the main `process` fu
 <script>
 (function() {{
     var ModalWindow = document.getElementById('B4ULeave-ModalWindow');
-    var Stay = document.getElementById('B4ULeave-Stay');
-    var Leave = document.getElementById('B4ULeave-Leave');
+    var Stay        = document.getElementById('B4ULeave-Stay');
+    var Leave       = document.getElementById('B4ULeave-Leave');
+    // pobieramy tekst wiadomości z <p>
+    var confirmationMessage = ModalWindow.querySelector('p').innerText;
+
+    var ignoreBeforeUnload = false;
+
+    document.addEventListener('click', function(e) {{
+        var a = e.target.closest('a[href]');
+        if (!a) return;
+        if (a.hostname === window.location.hostname) {{
+            ignoreBeforeUnload = true;
+        }}
+    }});
 
     window.addEventListener('beforeunload', function(e) {{
+        if (ignoreBeforeUnload) {{
+            ignoreBeforeUnload = false;
+            return;
+        }}
         ModalWindow.style.display = 'flex';
-        e.preventDefault();
-        e.returnValue = '';
-        return '';
+
+        e.returnValue = confirmationMessage;
+        return confirmationMessage;
     }});
 
     Stay.addEventListener('click', function() {{
@@ -97,3 +116,4 @@ def process(app, plugin_config: Dict[str, Any]): # Defines the main `process` fu
     app.route("/")(index)
 
     return app
+    
