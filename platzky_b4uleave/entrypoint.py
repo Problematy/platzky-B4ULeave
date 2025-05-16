@@ -5,7 +5,7 @@ def process(app, plugin_config: Dict[str, Any]): # Defines the main `process` fu
     # Store plugin configuration (defaults to empty dict)
     app.config['b4uleave'] = plugin_config or {}
 
-    message = app.config['b4uleave'].get('message', 'Czy na pewno chcesz<br>opuścić naszą stronę?')
+    message = app.config['b4uleave'].get('message', 'Are you sure you want to<br>leave our website?')
     stay = app.config['b4uleave'].get('stay', 'Stay')
     leave = app.config['b4uleave'].get('leave', 'Leave')
 
@@ -72,7 +72,6 @@ def process(app, plugin_config: Dict[str, Any]): # Defines the main `process` fu
     var ModalWindow = document.getElementById('B4ULeave-ModalWindow');
     var Stay        = document.getElementById('B4ULeave-Stay');
     var Leave       = document.getElementById('B4ULeave-Leave');
-    // pobieramy tekst wiadomości z <p>
     var confirmationMessage = ModalWindow.querySelector('p').innerText;
 
     var ignoreBeforeUnload = false;
