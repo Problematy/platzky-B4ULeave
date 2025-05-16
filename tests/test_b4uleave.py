@@ -18,7 +18,9 @@ def test_that_plugin_loads_b4uleave():
                     {
                         "name": "b4uleave",
                         "config": {
-                            "message": "Your custom message goes here"
+                            "message": "Your custom message goes here",
+                            "stay": "Staying custom message",
+                            "leave": "Leaving custom message"
                         },
                     }
                 ],
@@ -26,8 +28,11 @@ def test_that_plugin_loads_b4uleave():
         },
     }
 
+    # expected data
     b4uleave_function = "B4ULeave-ModalWindow"
     custom_message = "Your custom message goes here"
+    custom_stay = "Staying custom message"
+    custom_leave = "Leaving custom message"
 
     config_with_plugin = Config.model_validate(data_with_plugin)
 
@@ -39,7 +44,11 @@ def test_that_plugin_loads_b4uleave():
     decoded_response = response.data.decode()
     assert b4uleave_function in decoded_response
     assert custom_message in decoded_response
+    assert custom_stay in decoded_response
+    assert custom_leave in decoded_response
 
-    expected_html_fragment = ('<div class="B4ULeave-Content"')
-    assert expected_html_fragment in decoded_response
+    assert '<div class="B4ULeave-Content"' in decoded_response
     assert "<p>Your custom message goes here</p>" in decoded_response
+    assert 'Staying custom message' in decoded_response
+    assert 'Leaving custom message' in decoded_response
+
