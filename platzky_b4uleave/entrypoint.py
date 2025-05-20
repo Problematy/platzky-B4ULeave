@@ -110,9 +110,9 @@ def process(app, plugin_config: Dict[str, Any]): # Defines the main `process` fu
 
     # temporary route for testing purposes
     # this route ensures that the plugin can modify a simple HTML response
-    def index():
-        return "<html><body>Hello</body></html>"
-    app.route("/")(index)
+    # def index():
+    #     return "<html><body>Hello</body></html>"
+    # app.route("/")(index)
 
     return app
     

@@ -28,9 +28,9 @@ lint-check:
 	poetry run ruff check .
 	poetry run pyright .
 
-coverage:
-	poetry run coverage run --branch --source=platzky_hotjar -m pytest -m "not skip_coverage"
-	poetry run coverage lcov
+# coverage:
+# 	poetry run coverage run --branch --source=platzky_hotjar -m pytest -m "not skip_coverage"
+# 	poetry run coverage lcov
 
-html-cov: coverage
-	poetry run coverage html
+# html-cov: coverage
+# 	poetry run coverage html

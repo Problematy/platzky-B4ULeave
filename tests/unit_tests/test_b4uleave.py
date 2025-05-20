@@ -51,4 +51,3 @@ def test_that_plugin_loads_b4uleave():
     assert "<p>Your custom message goes here</p>" in decoded_response
     assert 'Staying custom message' in decoded_response
     assert 'Leaving custom message' in decoded_response
-
