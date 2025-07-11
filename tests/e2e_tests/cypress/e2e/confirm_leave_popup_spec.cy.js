@@ -1,51 +1,44 @@
-describe('B4ULeave plugin modal', () => {
+describe('B4ULeave plugin exit intent', () => {
     beforeEach(() => {
-        cy.visit('/'); 
+        cy.visit('/');
     });
 
-    it('shows modal on external navigation attempt', () => {
-        // Programmatically trigger beforeunload
+    it('shows modal when mouse leaves window (exit intent)', () => {
         cy.window().then((win) => {
-            const event = new Event('beforeunload', { bubbles: true, cancelable: true });
-            const returnValue = win.dispatchEvent(event);
-
-            // Modal should appear
-            cy.get('#B4ULeave-ModalWindow').should('be.visible');
-            cy.contains('Stay').should('exist');
-            cy.contains('Leave').should('exist');
-        });
-    });
-
-    it('hides modal when Stay is clicked', () => {
-        cy.window().then((win) => {
-            win.dispatchEvent(new Event('beforeunload'));
+            const event = new win.MouseEvent('mouseout', {
+                bubbles: true,
+                cancelable: true,
+                relatedTarget: null
+            });
+            win.document.dispatchEvent(event);
         });
 
         cy.get('#B4ULeave-ModalWindow').should('be.visible');
+        cy.contains('Stay').should('exist');
+        cy.contains('Leave').should('exist');
         cy.get('#B4ULeave-Stay').click();
         cy.get('#B4ULeave-ModalWindow').should('not.be.visible');
     });
 
-    it('navigates away when Leave is clicked', () => {
-        
-        cy.window().then((win) => {
-            win.dispatchEvent(new Event('beforeunload'));
+    it('changes URL after clicking Leave', () => {
+        //save the initial url before triggering the exit intent
+        cy.url().then((initialUrl) => {
+            cy.window().then((win) => {
+                const event = new win.MouseEvent('mouseout', {
+                    bubbles: true,
+                    cancelable: true,
+                    relatedTarget: null
+                });
+                win.document.dispatchEvent(event);
+            });
+
+            cy.get('#B4ULeave-Leave').click();
+            
+            // verify the url has changed
+            cy.url().should((newUrl) => {
+                expect(newUrl).not.to.eq(initialUrl);
+            });
         });
-        
-        // doesnt work
-        // cy.window().then((win) => {
-        //     cy.stub(win.location, 'assign').as('assignStub');
-        // });
-
-        // Trigger beforeunload, which displays the modal
-        cy.window().then((win) => {
-            win.dispatchEvent(new Event('beforeunload'));
-        });
-
-        // Modal should appear
-        cy.get('#B4ULeave-ModalWindow').should('be.visible');
-        cy.get('#B4ULeave-Leave').click();
-
-        // Cannot test the behavior because the browser's native beforeunload dialog is displayed
     });
+    
 });
