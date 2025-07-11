@@ -1,17 +1,24 @@
 from flask import Flask, Response
 from typing import Any, Dict
 
-def process(app, plugin_config: Dict[str, Any]): # Defines the main `process` function taking a Flask app instance and plugin configuration
+
+def process(
+    app, plugin_config: Dict[str, Any]
+):  # Defines the main 'process' function taking a Flask app instance and plugin configuration
     # Store plugin configuration (defaults to empty dict)
-    app.config['b4uleave'] = plugin_config or {}
+    app.config["b4uleave"] = plugin_config or {}
 
-    message = app.config['b4uleave'].get('message', 'Are you sure you want to<br>leave our website?')
-    stay = app.config['b4uleave'].get('stay', 'Stay')
-    leave = app.config['b4uleave'].get('leave', 'Leave')
+    message = app.config["b4uleave"].get(
+        "message", "Czy na pewno chcesz<br>opuścić naszą stronę?"
+    )
+    stay = app.config["b4uleave"].get("stay", "Stay")
+    leave = app.config["b4uleave"].get("leave", "Leave")
 
-    @app.after_request # Decorator that registers a function to run after each request is processed
+    @app.after_request  # Decorator that registers a function to run after each request is processed
     def add_B4ULeave(response: Response) -> Response:
-        if 'text/html' in response.headers.get('Content-Type', ''): # Function receives a Response object and returns a modified Response
+        if "text/html" in response.headers.get(
+            "Content-Type", ""
+        ):  # Function receives a Response object and returns a modified Response
             html = f"""
 <style>
 #B4ULeave-ModalWindow {{
@@ -69,50 +76,43 @@ def process(app, plugin_config: Dict[str, Any]): # Defines the main `process` fu
 
 <script>
 (function() {{
+
     var ModalWindow = document.getElementById('B4ULeave-ModalWindow');
     var Stay        = document.getElementById('B4ULeave-Stay');
     var Leave       = document.getElementById('B4ULeave-Leave');
+
+    // get the confirmation message from the <p> element
     var confirmationMessage = ModalWindow.querySelector('p').innerText;
 
-    var ignoreBeforeUnload = false;
+    // flag to prevent multiple displays
+    var hasShown = false;
 
-    document.addEventListener('click', function(e) {{
-        var a = e.target.closest('a[href]');
-        if (!a) return;
-        if (a.hostname === window.location.hostname) {{
-            ignoreBeforeUnload = true;
+    // detect first cursor exit from the page
+    document.addEventListener('mouseout', function(e) {{
+        e = e || window.event;
+        var from = e.relatedTarget || e.toElement;
+        // no relatedTarget means the cursor left the document area
+        if (!from && e.clientY <= 0 && !hasShown) {{
+            hasShown = true;
+            ModalWindow.style.display = 'flex';
         }}
     }});
 
-    window.addEventListener('beforeunload', function(e) {{
-        if (ignoreBeforeUnload) {{
-            ignoreBeforeUnload = false;
-            return;
-        }}
-        ModalWindow.style.display = 'flex';
-
-        e.returnValue = confirmationMessage;
-        return confirmationMessage;
-    }});
-
+    // hide modal when user chooses to stay
     Stay.addEventListener('click', function() {{
         ModalWindow.style.display = 'none';
     }});
 
+    // hide modal and redirect when user chooses to leave
     Leave.addEventListener('click', function() {{
         ModalWindow.style.display = 'none';
         window.location.href = 'about:blank';
     }});
 }})();
 </script>"""
-            response.set_data(response.get_data(as_text=True).replace('</body>', html + '</body>'))
+            response.set_data(
+                response.get_data(as_text=True).replace("</body>", html + "</body>")
+            )
         return response
 
-    # temporary route for testing purposes
-    # this route ensures that the plugin can modify a simple HTML response
-    # def index():
-    #     return "<html><body>Hello</body></html>"
-    # app.route("/")(index)
-
     return app
-    

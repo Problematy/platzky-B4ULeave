@@ -20,7 +20,7 @@ def test_that_plugin_loads_b4uleave():
                         "config": {
                             "message": "Your custom message goes here",
                             "stay": "Staying custom message",
-                            "leave": "Leaving custom message"
+                            "leave": "Leaving custom message",
                         },
                     }
                 ],
@@ -39,7 +39,7 @@ def test_that_plugin_loads_b4uleave():
     app_with_plugin = create_app_from_config(config_with_plugin)
 
     response = app_with_plugin.test_client().get("/")
-    
+
     assert response.status_code == 200
     decoded_response = response.data.decode()
     assert b4uleave_function in decoded_response
@@ -49,5 +49,5 @@ def test_that_plugin_loads_b4uleave():
 
     assert '<div class="B4ULeave-Content"' in decoded_response
     assert "<p>Your custom message goes here</p>" in decoded_response
-    assert 'Staying custom message' in decoded_response
-    assert 'Leaving custom message' in decoded_response
+    assert "Staying custom message" in decoded_response
+    assert "Leaving custom message" in decoded_response
