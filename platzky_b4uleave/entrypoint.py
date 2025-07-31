@@ -106,4 +106,5 @@ def process(app, plugin_config: Dict[str, Any]): # Defines the main `process` fu
             response.set_data(response.get_data(as_text=True).replace('</body>', html + '</body>'))
         return response
 
+
     return app
