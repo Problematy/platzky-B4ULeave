@@ -46,7 +46,7 @@ jobs:
 
 # Run all Cypress tests using default config
     - name: Run Cypress tests
-      working-directory: tests/e2e_tests/e2e
+      working-directory: tests/e2e_tests
       run: npx cypress run --spec "cypress/e2e/**/*"
 
     - name: Run Flask server in background
