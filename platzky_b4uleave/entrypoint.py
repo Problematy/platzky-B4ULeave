@@ -110,6 +110,7 @@ def process(
     }});
 }})();
 </script>"""
+
             response.set_data(
                 response.get_data(as_text=True).replace("</body>", html + "</body>")
             )
