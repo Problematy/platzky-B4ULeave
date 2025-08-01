@@ -46,9 +46,12 @@ jobs:
 
     - name: Run Flask server in background
       run: |
-        poetry run flask run &
-        echo $! > flask_pid.txt
-        sleep 3
+        echo "from flask import Flask; from platzky_b4uleave.entrypoint import process; app = Flask(__name__); app.route('/')(process)" > temp_app.py
+        export FLASK_APP=temp_app:app
+        export FLASK_ENV=development
+        poetry run flask run --port 5000 &
+        echo $! > flask.pid
+        sleep 5  # Czekaj aż serwer się uruchomi
 
 # Run all Cypress tests using default config
     - name: Run Cypress tests
