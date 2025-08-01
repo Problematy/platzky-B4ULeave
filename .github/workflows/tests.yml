@@ -44,11 +44,18 @@ jobs:
       run: |
         npm install cypress
 
+    - name: Setup hosts file
+      run: |
+        echo "127.0.0.1 goodmap.localhost" | sudo tee -a /etc/hosts
+
     - name: Run Flask server in background
       run: |
-        poetry run flask run --host=goodmap.localhost --port=5000 &
-        FLASK_PID=$!
-        sleep 5
+        echo "from flask import Flask; from platzky_b4uleave.entrypoint import process; app = Flask(__name__); app.route('/')(process)" > temp_app.py
+        export FLASK_APP=temp_app:app
+        export FLASK_ENV=development
+        poetry run flask run --host=goodmap.localhost --port=5000 & 
+        echo $! > flask.pid
+        sleep 3
 
 # Run all Cypress tests using default config
     - name: Run Cypress tests
