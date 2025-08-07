@@ -44,31 +44,17 @@ jobs:
       run: |
         npm install cypress
 
-    # - name: Run Flask server in background
-    #   run: |
-    #     echo "from flask import Flask; from platzky_b4uleave.entrypoint import process; app = Flask(__name__); app.route('/')(process)" > temp_app.py
-    #     export FLASK_APP=temp_app:app
-    #     export FLASK_ENV=development
-    #     poetry run flask run --host=goodmap.localhost --port=5000 & 
-    #     echo $! > flask.pid
-    #     sleep 3
+    - name: Run Flask server in background
+      run: |
+        PYTHONUNBUFFERED=1;FLASK_ENV=development;FLASK_APP="goodmap.goodmap:create_app(config_path='./tests/e2e_tests/e2e_test_config.yml')" poetry run flask run &
+        FLASK_PID=$!
+        sleep 3
 
-    # - name: Run Cypress tests
-    #   working-directory: tests/e2e_tests
-    #   run: npx cypress run --spec "cypress/e2e/**/*"
-
-<<<<<<< HEAD
-# Run all Cypress tests using default config
     - name: Run Cypress tests
       working-directory: tests/e2e_tests
       run: npx cypress run --spec "cypress/e2e/**/*"
 
-# Stop the Flask server using the saved process ID
     - name: Stop Flask server
-      run: kill $FLASK_PID || true
-=======
-    # - name: Stop Flask server
-    #   run: kill $FLASK_PID || true
->>>>>>> 23b4a57 (update)
+      run: kill $FLASK_PID
 
 
