@@ -124,7 +124,7 @@
   },
   "plugins": [
     {
-        "name": "msgbar",
+        "name": "b4uleave",
         "config": {
             "message": "Your custom message goes here"
         }
