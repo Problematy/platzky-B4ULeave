@@ -4,11 +4,11 @@ on:
   pull_request:
     branches:
       - main
-      - addedUnitTest
+      - feature/plugin-with-tests
   push:
     branches:
       - main
-      - addedUnitTest
+      - feature/plugin-with-tests
 
 permissions:
   contents: 'read'
@@ -27,7 +27,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install poetry==1.7.1
         poetry install
-        
     - name: Run linters
       run: make lint-check
 
@@ -44,10 +43,12 @@ jobs:
       run: |
         npm install cypress
 
-    - name: Run Flask server in background
+    - name: Run e2e tests
       run: |
-        poetry run flask --app "platzky.platzky:create_app(config_path='tests/e2e_tests/e2e_test_config.yml')" run --debug &
+        poetry run flask --app "tests.e2e_tests.e2e_app:create_app(config_path='tests/e2e_tests/e2e_test_config.yml')" run --debug --host=localhost &
+        sleep 6
+        cd tests/e2e_tests && npx cypress run --spec "cypress/e2e/**/*"
 
-    - name: Run Cypress tests
-      working-directory: tests/e2e_tests
-      run: npx cypress run --spec "cypress/e2e/**/*"
+
+
+
