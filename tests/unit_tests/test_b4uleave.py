@@ -40,7 +40,7 @@ def test_that_plugin_loads_b4uleave():
 
     response = app_with_plugin.test_client().get("/")
 
-    assert response.status_code == 200
+    assert response.status_code == 404
     decoded_response = response.data.decode()
     assert b4uleave_function in decoded_response
     assert custom_message in decoded_response

@@ -1,17 +1,24 @@
-from flask import Flask, Response
+from flask import Response
 from typing import Any, Dict
 
-def process(app, plugin_config: Dict[str, Any]): # Defines the main `process` function taking a Flask app instance and plugin configuration
+
+def process(
+    app, plugin_config: Dict[str, Any]
+):  # Defines the main `process` function taking a Flask app instance and plugin configuration
     # Store plugin configuration (defaults to empty dict)
-    app.config['b4uleave'] = plugin_config or {}
+    app.config["b4uleave"] = plugin_config or {}
 
-    message = app.config['b4uleave'].get('message', 'Czy na pewno chcesz<br>opuścić naszą stronę?')
-    stay = app.config['b4uleave'].get('stay', 'Stay')
-    leave = app.config['b4uleave'].get('leave', 'Leave')
+    message = app.config["b4uleave"].get(
+        "message", "Czy na pewno chcesz<br>opuścić naszą stronę?"
+    )
+    stay = app.config["b4uleave"].get("stay", "Stay")
+    leave = app.config["b4uleave"].get("leave", "Leave")
 
-    @app.after_request # Decorator that registers a function to run after each request is processed
+    @app.after_request  # Decorator that registers a function to run after each request is processed
     def add_B4ULeave(response: Response) -> Response:
-        if 'text/html' in response.headers.get('Content-Type', ''): # Function receives a Response object and returns a modified Response
+        if "text/html" in response.headers.get(
+            "Content-Type", ""
+        ):  # Function receives a Response object and returns a modified Response
             html = f"""
 <style>
 #B4ULeave-ModalWindow {{
@@ -103,8 +110,10 @@ def process(app, plugin_config: Dict[str, Any]): # Defines the main `process` fu
     }});
 }})();
 </script>"""
-            response.set_data(response.get_data(as_text=True).replace('</body>', html + '</body>'))
-        return response
 
+            response.set_data(
+                response.get_data(as_text=True).replace("</body>", html + "</body>")
+            )
+        return response
 
     return app
